@@ -34,9 +34,14 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="290dp"
-        android:layout_height="45dp"
+        android:layout_width="368dp"
+        android:layout_height="53dp"
+        android:layout_marginLeft="21dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="146dp"
         android:text="TextView"
-        tools:layout_editor_absoluteX="21dp"
-        tools:layout_editor_absoluteY="139dp" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
 </android.support.constraint.ConstraintLayout>
