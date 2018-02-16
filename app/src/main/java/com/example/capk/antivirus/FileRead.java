@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 /**
  * Created by capk on 11/21/17.
  */
-
+// Need to modify this class ... Use raw Thread instead of AsyncTask
 public class FileRead extends AsyncTask <Context,Void,String>{
 
     @Override

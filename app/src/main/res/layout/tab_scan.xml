@@ -1,24 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin"
+    tools:layout_editor_absoluteY="81dp">
 
-    <Button
-        android:id="@id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rectangle_button"
-        android:text="SCAN"
-        android:textColor="@android:color/holo_blue_bright" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:orientation="horizontal">
 
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="215dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name"
+            tools:layout_editor_absoluteX="34dp"
+            tools:layout_editor_absoluteY="25dp" />
+
+        <Button
+            android:id="@+id/scan"
+            android:layout_width="88dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@drawable/rectangle_button"
+            android:text="SCAN"
+            android:textColor="@android:color/holo_blue_bright"
+            tools:layout_editor_absoluteX="280dp"
+            tools:layout_editor_absoluteY="25dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="417dp"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="85dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:text="Calculated Hash"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            tools:layout_editor_absoluteX="52dp"
+            tools:layout_editor_absoluteY="182dp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="137dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            tools:layout_editor_absoluteX="163dp"
+            tools:layout_editor_absoluteY="137dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="359dp"
+        android:layout_height="127dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="85dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:text="Official  Hash"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            tools:layout_editor_absoluteX="52dp"
+            tools:layout_editor_absoluteY="137dp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="137dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            tools:layout_editor_absoluteX="163dp"
+            tools:layout_editor_absoluteY="182dp" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/button"
         style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
+        android:layout_width="112dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@drawable/rectangle_button"
+        android:gravity="center_vertical|center_horizontal|center"
         android:text="Remove"
-        android:textColor="@android:color/holo_blue_bright" />
+        android:textColor="@android:color/holo_blue_bright"
+        tools:layout_editor_absoluteX="154dp"
+        tools:layout_editor_absoluteY="434dp" />
+
 </LinearLayout>
