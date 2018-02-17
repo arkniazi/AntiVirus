@@ -21,15 +21,15 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    input = new FileRead().execute(getApplicationContext()).get();
-                    MD5 md5 = new MD5();
-                    textView.setText(md5.getMD5(input));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    input = new FileRead().execute(getApplicationContext()).get();
+//                    MD5 md5 = new MD5();
+//                    textView.setText(md5.getMD5(input));
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
     }

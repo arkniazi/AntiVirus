@@ -17,7 +17,8 @@ public class MD5 {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             byte[] strByte = messageDigest.digest(input.getBytes());
             BigInteger number = new BigInteger(1, strByte);
-            hashtext = number.toString();
+            hashtext = number.toString(16);
+//            fill to 32 char
             while (hashtext.length() < 32) {
                 hashtext = "0" + hashtext;
 

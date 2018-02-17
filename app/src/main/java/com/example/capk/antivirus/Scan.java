@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -26,12 +31,12 @@ public class Scan extends android.support.v4.app.Fragment {
     String apkName;
     EditText name;
     PackageManager packageManager;
-    TextView officialHash;
+    TextView textView;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_scan, container, false);
         name = rootView.findViewById(R.id.editText2);
         packageManager = getContext().getPackageManager();
-        officialHash = rootView.findViewById(R.id.textView4);
+        textView = rootView.findViewById(R.id.textView2);
         Button scan = rootView.findViewById(R.id.scan);
         scan.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("WrongConstant")
@@ -50,22 +55,40 @@ public class Scan extends android.support.v4.app.Fragment {
                     String name = (String) packageManager.getApplicationLabel(applicationInfo);
                     Log.d("Name", name+"");
                     if(name.equals(apkName)){
-
+                        String hashSHA1 = "";
+                        String hashMD5 = "";
+                        FileRead fileRead = new FileRead(getContext(),applicationInfo.dataDir);
+                        String data = fileRead.getRes();
+                        SHA1 sha1 = new SHA1();
+                        MD5 md5 = new MD5();
                         try {
-                             Signature[] signatures = packageManager.getPackageInfo(packageName,PackageManager.GET_SIGNATURES).signatures;
-                            for (Signature signature: signatures){
-                                Log.d("Signature ", signature.hashCode()+"");
-                                officialHash.setText(signature.hashCode()+"");
-                            }
+                            hashSHA1 = sha1.SHA1(data);
+                            hashMD5 = md5.getMD5(data);
+
+                        } catch (NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+
+                        PackageInfo pinfo = null;
+                        try {
+                            pinfo = packageManager.getPackageInfo(packageName, 0);
                         } catch (PackageManager.NameNotFoundException e) {
                             e.printStackTrace();
                         }
+                        int versionNumber = pinfo.versionCode;
+                        String versionName = pinfo.versionName;
+                        Log.d("SHA1", " "+hashSHA1);
+                        textView.setText("MD5: "+hashMD5+"\n \nSHA1: "+hashSHA1
+                        +"\n"+versionNumber+"\n"+versionName);
+
                     }
 
 
                 }
 //                List<ResolveInfo> pkgAppsList = getContext().getPackageManager().queryIntentActivities( mainIntent, 0);
-//                //      //  this code reads the apk content even if it is not installed
+                //      //  this code reads the apk content even if it is not installed
 //                final PackageManager packageManager = getActivity().getPackageManager();
 //                String path = Environment.getExternalStorageDirectory()+"/"+apkName;
 //                PackageInfo packageInfo = packageManager.getPackageArchiveInfo(path,0);

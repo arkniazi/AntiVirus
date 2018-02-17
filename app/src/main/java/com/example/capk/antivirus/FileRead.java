@@ -12,14 +12,21 @@ import java.io.InputStreamReader;
  * Created by capk on 11/21/17.
  */
 // Need to modify this class ... Use raw Thread instead of AsyncTask
-public class FileRead extends AsyncTask <Context,Void,String>{
+public class FileRead extends Thread {
+    String filename;
+    String res = "";
+    Context context;
+    FileRead(Context context,String file){
+        this.context = context;
+        filename = file;
+    }
 
     @Override
-    protected String doInBackground(Context... contexts) {
-        String res = "";
+    public void run() {
+        super.run();
         try{
-            File file = contexts[0].getFilesDir();
-            InputStream inputStream = contexts[0].openFileInput("I:\\hello1.txt");
+            File file = context.getFilesDir();
+            InputStream inputStream = context.openFileInput(filename);
             if (inputStream!=null){
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -36,11 +43,9 @@ public class FileRead extends AsyncTask <Context,Void,String>{
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
-        return res;
     }
 
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
+    public String getRes() {
+        return res;
     }
 }
