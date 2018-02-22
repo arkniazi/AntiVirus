@@ -33,6 +33,7 @@ public class MyFileRead extends Thread {
     public void run() {
         super.run();
         try{
+            //Reading apk file contents
             JarFile jarFile = new JarFile(filename);
             Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
             JarEntry jarEntry = null;
