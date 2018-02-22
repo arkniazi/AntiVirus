@@ -37,24 +37,22 @@
     </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/textView2"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_height="288dp"
+        android:layout_weight="1">
 
-    <Button
-        android:id="@+id/button"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="112dp"
-        android:layout_height="28dp"
-        android:layout_gravity="center"
-        android:layout_weight=".1"
-        android:background="@drawable/rectangle_button"
-        android:gravity="center_vertical|center_horizontal|center"
-        android:text="Remove"
-        android:textColor="@android:color/holo_blue_bright"
-        tools:layout_editor_absoluteX="154dp"
-        tools:layout_editor_absoluteY="434dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="358dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

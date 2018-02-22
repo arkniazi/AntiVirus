@@ -1,5 +1,7 @@
 package com.example.capk.antivirus;
 
+import android.util.Base64;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -27,6 +29,8 @@ public class SHA1 {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
         md.update(text.getBytes("iso-8859-1"), 0, text.length());
         byte[] sha1hash = md.digest();
-        return convertToHex(sha1hash);
+        String result = Base64.encodeToString(sha1hash, Base64.DEFAULT);
+        result = result.substring(0,result.length()-1);
+        return result;
     }
 }

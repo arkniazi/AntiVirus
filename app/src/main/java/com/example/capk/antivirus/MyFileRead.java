@@ -2,21 +2,29 @@ package com.example.capk.antivirus;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.*;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by capk on 11/21/17.
  */
 // Need to modify this class ... Use raw Thread instead of AsyncTask
-public class FileRead extends Thread {
+public class MyFileRead extends Thread {
     String filename;
     String res = "";
     Context context;
-    FileRead(Context context,String file){
+    MyFileRead(Context context, String file){
         this.context = context;
         filename = file;
     }
@@ -25,13 +33,28 @@ public class FileRead extends Thread {
     public void run() {
         super.run();
         try{
-            File file = context.getFilesDir();
-            InputStream inputStream = context.openFileInput(filename);
+            JarFile jarFile = new JarFile(filename);
+            Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
+            JarEntry jarEntry = null;
+            while (jarEntryEnumeration.hasMoreElements()){
+            jarEntry = jarEntryEnumeration.nextElement();
+                if (jarEntry.getName().equals("AndroidManifest.xml")){
+                    jarEntry = jarFile.getJarEntry(jarEntry.getName());
+                    break;
+                }
+
+            }
+            InputStream inputStream = jarFile.getInputStream(jarEntry);
+
+//            InputStream inputStream = getClass().getResourceAsStream(filename+"/classes.dex");//new FileInputStream(new File(filename+"/classes.dex"));
+
+//            Log.d("filename ", "file "+filename);
             if (inputStream!=null){
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String result = "";
                 StringBuilder stringBuilder = new StringBuilder();
+//                    Log.d("Reading ", "run: Reading");
                 while((result = bufferedReader.readLine())!=null)
                 {
                     stringBuilder.append(result);
