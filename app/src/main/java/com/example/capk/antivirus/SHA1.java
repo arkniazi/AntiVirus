@@ -1,10 +1,20 @@
 package com.example.capk.antivirus;
 
+import android.text.style.TabStopSpan;
 import android.util.Base64;
 
+import com.google.common.io.BaseEncoding;
+
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import static android.util.Base64.*;
 
 /**
  * Created by capk on 2/16/18.
@@ -12,25 +22,50 @@ import java.security.NoSuchAlgorithmException;
 
 public class SHA1 {
 // github source https://gist.github.com/kostiakoval/9856908
-    private static String convertToHex(byte[] data) {
-        StringBuilder buf = new StringBuilder();
-        for (byte b : data) {
-            int halfbyte = (b >>> 4) & 0x0F;
-            int two_halfs = 0;
-            do {
-                buf.append((0 <= halfbyte) && (halfbyte <= 9) ? (char) ('0' + halfbyte) : (char) ('a' + (halfbyte - 10)));
-                halfbyte = b & 0x0F;
-            } while (two_halfs++ < 1);
-        }
-        return buf.toString();
+public static String convertToHex(byte[] data) {
+    StringBuffer buf = new StringBuffer();
+    for (int i = 0; i < data.length; i++) {
+        int halfbyte = (data[i] >>> 4) & 0x0F;
+        int two_halfs = 0;
+        do {
+            if ((0 <= halfbyte) && (halfbyte <= 9))
+                buf.append((char) ('0' + halfbyte));
+            else
+                buf.append((char) ('a' + (halfbyte - 10)));
+            halfbyte = data[i] & 0x0F;
+        } while(two_halfs++ < 1);
     }
+    return buf.toString();
+}
 
-    public  String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        MessageDigest md = MessageDigest.getInstance("SHA-1");
+    public static String SHA1(String text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest md = MessageDigest.getInstance("SHA1");
+
         md.update(text.getBytes("iso-8859-1"), 0, text.length());
-        byte[] sha1hash = md.digest();
-        String result = Base64.encodeToString(sha1hash, Base64.DEFAULT);
-        result = result.substring(0,result.length()-1);
-        return result;
+        char[] charArray = convertToHex(md.digest()).toCharArray();
+
+        try {
+            byte[] byteArray = Hex.decodeHex(charArray);
+            return BaseEncoding.base64().encode(byteArray);
+        } catch (DecoderException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    public static String SHA1(byte[] text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest md = MessageDigest.getInstance("SHA1");
+
+        md.update(text, 0, text.length);
+        char[] charArray = convertToHex(md.digest()).toCharArray();
+
+        try {
+            byte[] byteArray = Hex.decodeHex(charArray);
+            return BaseEncoding.base64().encode(byteArray);
+        } catch (DecoderException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

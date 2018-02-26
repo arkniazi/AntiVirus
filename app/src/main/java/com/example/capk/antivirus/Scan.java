@@ -24,10 +24,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -69,44 +71,35 @@ public class Scan extends android.support.v4.app.Fragment {
 
                 for (ApplicationInfo applicationInfo : pkgAppsList){
                     String packageName =applicationInfo.packageName;
-//                    Log.d("Name", packageName+"");
+
                     String name = (String) packageManager.getApplicationLabel(applicationInfo);
-//                    Log.d("Name", name+"");
 
                     if(name.equals(apkName) && isStoragePermissionGranted()){
                         String hashSHA1 = "";
-                        String hashMD5 = "";
-
+                        String hashSHA1Byte = "";
                         MyFileRead fileRead = new MyFileRead(getContext(),applicationInfo.sourceDir);
                         fileRead.start();
                         while (fileRead.isAlive()){
-
                         }
+                        FileToHash.calculateMD5(applicationInfo.sourceDir);
+                        byte[] dataBytes = fileRead.getByte();
                         String data = fileRead.getRes();
                         SHA1 sha1 = new SHA1();
-                        MD5 md5 = new MD5();
+                        PackageInfo pinfo = null;
                         try {
                             hashSHA1 = sha1.SHA1(data);
-                            hashMD5 = md5.getMD5(data);
+                            hashSHA1Byte = sha1.SHA1(dataBytes);
+                            pinfo = packageManager.getPackageInfo(packageName, 0);
+                            int versionNumber = pinfo.versionCode;
 
+                            String versionName = pinfo.versionName;
+
+                            textView.setText("SHA1: "+hashSHA1+"\nSHA1 Bytes: "+hashSHA1Byte
+                            +"\nVersion Number:"+versionNumber+"\nVersion Name: "+versionName);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        PackageInfo pinfo = null;
-                        try {
-                            pinfo = packageManager.getPackageInfo(packageName, 0);
-
-                        } catch (PackageManager.NameNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        int versionNumber = pinfo.versionCode;
-                        String versionName = pinfo.versionName;
-                        GetSignature  getSignature = new GetSignature(getContext());
-                        getSignature.getSignature(packageName);
-                        Log.d("SHA1", " "+hashSHA1);
-                        textView.setText("MD5: "+hashMD5+"\nSHA1: "+hashSHA1
-                        +"\nVersion Number:"+versionNumber+"\nVersion Name: "+versionName);
 
                     }
                 }
@@ -118,20 +111,6 @@ public class Scan extends android.support.v4.app.Fragment {
     }
 
 
-//    public void runShell(String command){
-//
-//        try {
-////            Runtime.getRuntime().exec("adb shell");
-////            Runtime.getRuntime().exec("su");
-//            Runtime.getRuntime().exec(command);
-////            Runtime.getRuntime().exec("exit");
-//
-//        } catch (IOException e) {
-//            Log.d("Shell ", "runShell: Fuck this");
-//            e.printStackTrace();
-//
-//        }
-//    }
 
     // answer from stack_over_flow  https://stackoverflow.com/questions/2695746/how-to-get-a-list-of-installed-android-applications-and-pick-one-to-ru
 //    private boolean isSystemPackage(PackageInfo pkgInfo) {
@@ -158,4 +137,6 @@ public class Scan extends android.support.v4.app.Fragment {
         }
 
     }
+
+
 }

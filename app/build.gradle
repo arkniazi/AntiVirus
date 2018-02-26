@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -29,4 +29,6 @@ dependencies {
     compile 'com.android.support:design:26.+'
     compile 'eu.chainfire:libsuperuser:1.0.0.+'
     testCompile 'junit:junit:4.12'
+    compile 'com.google.guava:guava:16.0.1'
+    compile files('commons-codec-1.11/commons-codec-1.11.jar')
 }
