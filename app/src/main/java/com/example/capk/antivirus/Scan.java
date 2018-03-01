@@ -81,20 +81,17 @@ public class Scan extends android.support.v4.app.Fragment {
                         fileRead.start();
                         while (fileRead.isAlive()){
                         }
-                        FileToHash.calculateMD5(applicationInfo.sourceDir);
+                        String data = FileToHash.calculateSHA1(applicationInfo.sourceDir);
                         byte[] dataBytes = fileRead.getByte();
-                        String data = fileRead.getRes();
-                        SHA1 sha1 = new SHA1();
+                        StringBuilder fileData = fileRead.getRes();
                         PackageInfo pinfo = null;
                         try {
-                            hashSHA1 = sha1.SHA1(data);
-                            hashSHA1Byte = sha1.SHA1(dataBytes);
                             pinfo = packageManager.getPackageInfo(packageName, 0);
                             int versionNumber = pinfo.versionCode;
 
                             String versionName = pinfo.versionName;
 
-                            textView.setText("SHA1: "+hashSHA1+"\nSHA1 Bytes: "+hashSHA1Byte
+                            textView.setText("SHA1: "+data+"\nSHA1 Bytes: "+hashSHA1Byte
                             +"\nVersion Number:"+versionNumber+"\nVersion Name: "+versionName);
                         } catch (Exception e) {
                             e.printStackTrace();

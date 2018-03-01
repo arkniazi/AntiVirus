@@ -31,4 +31,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.google.guava:guava:16.0.1'
     compile files('commons-codec-1.11/commons-codec-1.11.jar')
+    compile files('commons-io-2.6/commons-io-2.6.jar')
 }
