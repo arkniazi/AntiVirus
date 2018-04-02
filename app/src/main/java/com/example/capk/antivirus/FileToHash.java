@@ -15,14 +15,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+
 
 import static android.content.ContentValues.TAG;
 
@@ -33,15 +30,14 @@ import static android.content.ContentValues.TAG;
 public class FileToHash {
 
     static long size = 0;
-    public static String calculateSHA1(String filename){
+    public static String calculateSHA256(String apkName,String filename){
 
 
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            MessageDigest md = MessageDigest.getInstance("SHA256");
+            InputStream inputStream = get(apkName,filename);
 
-            InputStream inputStream = get(filename);
-
-            byte[] dataBytes = new byte[1024];
+            byte[] dataBytes = new byte[4096];
             int count;
             while ((count = inputStream.read(dataBytes)) >= 0) {
                 md.update(dataBytes, 0, count);
@@ -57,7 +53,7 @@ public class FileToHash {
             for (int i = 0; i < mdbytes.length; i++) {
                 sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
             }
-            Log.d(TAG, "calculateSHA1: "+ sb.toString()+" size "+size);
+//            Log.d(TAG, "calculateSHA256: "+ sb.toString()+" size "+size);
             //convert the byte to hex format method 2
 
             StringBuffer hexString = new StringBuffer();
@@ -66,9 +62,9 @@ public class FileToHash {
                 if(hex.length()==1) hexString.append('0');
                 hexString.append(hex);
             }
-            Log.d(TAG, "calculateSHA1: "+ hexString.toString());
+//            Log.d(TAG, "calculateSHA256: "+ hexString.toString());
 
-            Log.d(TAG, "calculateSHA1 Base64: "+BaseEncoding.base64().encode(byteArray));
+//            Log.d(TAG, "calculateSHA256 Base64: "+BaseEncoding.base64().encode(byteArray));
             return BaseEncoding.base64().encode(byteArray);
 
         } catch (IOException e) {
@@ -84,22 +80,20 @@ public class FileToHash {
 
 
 
-    public static InputStream get(String apkPath){
+    public static InputStream get(String apkPath,String filename){
 
         JarFile containerJar = null;
 
         try {
             Log.d(TAG, "get: "+apkPath);
-
+            Log.d(TAG, "get: "+filename);
             containerJar = new JarFile(apkPath);
 
 
-            ZipEntry zzz = containerJar.getEntry("assets/kazoo/lut_NOIR.png");
+            ZipEntry zzz = containerJar.getEntry(filename);
             size = zzz.getSize();
 
             if (zzz != null) {
-
-                System.out.println("long " + zzz.getCrc());
 
                 InputStream in = containerJar.getInputStream(zzz);
 
@@ -108,10 +102,7 @@ public class FileToHash {
 
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-
         }
-
         return null;
     }
 }
