@@ -24,10 +24,11 @@
 
     <ImageView
         android:id="@+id/iconScan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@+id/appName"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/appIcon"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        android:layout_marginEnd="12dp"
+        app:srcCompat="@drawable/updatedsecurityforprotectiononinternet" />
 
 </RelativeLayout>

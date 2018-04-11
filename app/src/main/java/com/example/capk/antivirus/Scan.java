@@ -56,6 +56,13 @@ public class Scan extends android.support.v4.app.Fragment {
                     String packageName =applicationInfo.packageName;
                     String name = (String) packageManager.getApplicationLabel(applicationInfo);
 
+                    // Retrieve Permissions
+//                    try {
+//                      String []permissions = APKPermissions.getPermissions(packageManager.getPackageInfo(packageName,PackageManager.GET_PERMISSIONS));
+//                    } catch (PackageManager.NameNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
+
 
                     if(name.equals(apkName) && isStoragePermissionGranted()){
                     boolean installerVerified  = checkInstaller.isLegal(packageName);
