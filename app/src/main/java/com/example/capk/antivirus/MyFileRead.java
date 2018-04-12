@@ -64,7 +64,6 @@ public class MyFileRead extends Thread {
             //need to improve for old apps e.g who don't use sha256
             while ((result = bufferedReader.readLine()) != null) {
                 if (result.contains("Name: classes.dex")){
-                    Log.d(TAG, "run: inside");
                     hashResult = bufferedReader.readLine();
                     bufferedReader.readLine();
                     result1 = bufferedReader.readLine();

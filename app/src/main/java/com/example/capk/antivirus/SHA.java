@@ -20,7 +20,7 @@ import static android.util.Base64.*;
  * Created by capk on 2/16/18.
  */
 
-public class SHA1 {
+public class SHA {
 // github source https://gist.github.com/kostiakoval/9856908
 public static String convertToHex(byte[] data) {
     StringBuffer buf = new StringBuffer();
@@ -53,16 +53,18 @@ public static String convertToHex(byte[] data) {
 
         return null;
     }
-    public static String SHA1(byte[] text) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        MessageDigest md = MessageDigest.getInstance("SHA1");
+    public static String SHA256(byte[] text)  {
+        try {
+        MessageDigest md = MessageDigest.getInstance("SHA256");
 
         md.update(text, 0, text.length);
         char[] charArray = convertToHex(md.digest()).toCharArray();
 
-        try {
             byte[] byteArray = Hex.decodeHex(charArray);
             return BaseEncoding.base64().encode(byteArray);
         } catch (DecoderException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 

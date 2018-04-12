@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,51 +8,34 @@
     android:padding="@dimen/activity_horizontal_margin"
     tools:layout_editor_absoluteY="81dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="66dp"
-        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/editText2"
-            android:layout_width="215dp"
-            android:layout_height="46dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="textPersonName"
-            tools:layout_editor_absoluteX="34dp"
-            tools:layout_editor_absoluteY="25dp" />
+    <LinearLayout
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="85dp"
+        tools:layout_editor_absoluteY="76dp">
 
         <Button
-            android:id="@+id/scan"
-            android:layout_width="88dp"
+            android:id="@+id/fullScan"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_weight="1"
             android:background="@drawable/rectangle_button"
-            android:text="SCAN"
+            android:text="Full SCAN"
             android:textColor="@android:color/holo_blue_bright"
-            tools:layout_editor_absoluteX="280dp"
-            tools:layout_editor_absoluteY="25dp" />
+            tools:layout_editor_absoluteX="134dp"
+            tools:layout_editor_absoluteY="153dp" />
 
+        <Button
+            android:id="@+id/partialScan"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/rectangle_button"
+            android:text="Partial Scan"
+            android:textColor="@android:color/holo_blue_bright"
+            tools:layout_editor_absoluteX="135dp"
+            tools:layout_editor_absoluteY="80dp" />
     </LinearLayout>
 
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="288dp"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="358dp"
-                android:layout_weight="1" />
-        </LinearLayout>
-    </ScrollView>
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
