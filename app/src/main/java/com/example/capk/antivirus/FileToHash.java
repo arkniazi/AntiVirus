@@ -1,7 +1,5 @@
 package com.example.capk.antivirus;
 
-import android.util.Log;
-
 import com.google.common.io.BaseEncoding;
 
 import org.apache.commons.codec.DecoderException;
@@ -13,8 +11,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by capk on 2/26/18.
@@ -69,9 +65,7 @@ public class FileToHash {
         JarFile containerJar = null;
 
         try {
-            Log.d(TAG, "get: "+apkPath);
-            Log.d(TAG, "get: "+filename);
-            containerJar = new JarFile(apkPath);
+           containerJar = new JarFile(apkPath);
 
             ZipEntry zzz = containerJar.getEntry(filename);
             if (zzz != null) {

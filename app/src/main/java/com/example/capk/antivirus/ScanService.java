@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +27,7 @@ public class ScanService extends IntentService {
 
     LinkedList<String> nameList = new LinkedList<>();
     LinkedList<String> hashList = new LinkedList<>();
-
+    DBContract dbContract;
     public ScanService(String name) {
         super(name);
     }
@@ -40,16 +39,25 @@ public class ScanService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         String scanType = intent.getDataString();
         if (scanType.equals("partial")){
-            Log.d(TAG, "onHandleIntent: "+scanType);
+            dbContract = new DBContract(getApplicationContext());
+            dbContract.dropTable();
+            partialScan();
         }
-        partialScan();
     }
 
     public void partialScan(){
+
         PackageManager packageManager = getApplicationContext().getPackageManager();
         List<ApplicationInfo> pkgAppsList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+        if (true){
+            for (int i=0;i<pkgAppsList.size();i++){
+                if(isSystemPackage(pkgAppsList.get(i))) {
+                    pkgAppsList.remove(i);
+                    --i;
 
-        for (int a = 0;a<pkgAppsList.size()-1;a++) {
+                }                }
+
+        for (int a = 0;a<pkgAppsList.size();a++) {
             ApplicationInfo applicationInfo = pkgAppsList.get(a);
             String packageName = applicationInfo.packageName;
             String[] permissions = GetFiles.getPermissions(packageManager,applicationInfo);
@@ -65,24 +73,25 @@ public class ScanService extends IntentService {
                 hashSHA1 = FileToHash.calculateSHA256(applicationInfo.sourceDir, nameList.get(i));
                 hashes[i] = hashSHA1;
                 check = check && hashSHA1.equals(hashList.get(i));
-                android.util.Log.d(TAG, "partialScan: "+hashSHA1);
             }
 
             PackageInfo pinfo = null;
             try {
                 pinfo = packageManager.getPackageInfo(packageName, 0);
-                int versionNumber = pinfo.versionCode;
-                String versionName = pinfo.versionName;
-//                   textView.setText("App Version Number:" +
-//                           versionNumber + "\nApp Version Name: " + versionName + "\nClasses Hash matches: " + check);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             writePermissions(packageName,permissions,hashes);
-            int percent = (int)((a * 100.0f) / pkgAppsList.size());
+            int percent = (int)(((a+1) * 100.0f) / pkgAppsList.size());
+            android.util.Log.d(TAG, "partialScan: "+percent+ " "+a+" "+pkgAppsList.size());
             updateProgress( percent);
-        }
+            String dexCheck = "infected";
+            if (check)
+                dexCheck = "Not infected";
 
+            dbContract.insertData(packageName,dexCheck,pinfo.versionName, String.valueOf(pinfo.versionCode));
+            }
+        }
     }
 
     public void fullScan(){
@@ -90,7 +99,6 @@ public class ScanService extends IntentService {
     }
 
     public void updateProgress(int progress){
-        Log.d(TAG, "updateProgress: "+progress);
         Intent intent = new Intent("DAGON_SCAN");
         intent.putExtra("progress",progress);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
@@ -115,12 +123,14 @@ public class ScanService extends IntentService {
                 e.printStackTrace();
             }
         }
+    }
 
+    private boolean isSystemPackage(ApplicationInfo applicationInfo) {
+        return ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
     }
 
 
     public class ScanHelper {
-
         public void getPathList(ApplicationInfo applicationInfo) {
             MyFileRead fileRead = new MyFileRead(getApplicationContext(), applicationInfo.sourceDir);
             fileRead.start();

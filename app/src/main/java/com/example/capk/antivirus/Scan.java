@@ -2,6 +2,7 @@ package com.example.capk.antivirus;
 
 import android.Manifest.permission;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -18,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import static android.content.ContentValues.TAG;
+import at.grabner.circleprogress.CircleProgressView;
 
 /**
  * Created by CAPK on 1/29/2018.
@@ -26,11 +28,16 @@ import static android.content.ContentValues.TAG;
 
 
 public class Scan extends android.support.v4.app.Fragment {
+    CircleProgressView mCircleView ;
+    Button partialScan;
+    Button fullScan;
 
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.tab_scan, container, false);
-        Button partialScan = rootView.findViewById(R.id.partialScan);
-        Button fullScan = rootView.findViewById(R.id.fullScan);
+        partialScan = rootView.findViewById(R.id.partialScan);
+        fullScan = rootView.findViewById(R.id.fullScan);
+        mCircleView = rootView.findViewById(R.id.circleView);
 
         partialScan.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("WrongConstant")
@@ -43,6 +50,10 @@ public class Scan extends android.support.v4.app.Fragment {
                 Helper helper = new Helper();
                 IntentFilter intentFilter = new IntentFilter("DAGON_SCAN");
                 LocalBroadcastManager.getInstance(getContext()).registerReceiver(helper,intentFilter);
+                partialScan.setVisibility(View.INVISIBLE);
+                fullScan.setVisibility(View.INVISIBLE);
+                mCircleView.setVisibility(View.VISIBLE);
+
 
 
             }
@@ -68,6 +79,26 @@ public class Scan extends android.support.v4.app.Fragment {
         getContext().stopService(intent);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isMyServiceRunning(ScanService.class)){
+            partialScan.setVisibility(View.INVISIBLE);
+            fullScan.setVisibility(View.INVISIBLE);
+            mCircleView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public class Helper extends BroadcastReceiver{
         public  boolean isStoragePermissionGranted() {
             if (Build.VERSION.SDK_INT >= 23) {
@@ -86,7 +117,21 @@ public class Scan extends android.support.v4.app.Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             int progress = intent.getIntExtra("progress",0);
-            android.util.Log.d(TAG, "onReceive: "+progress);
+            mCircleView.setValue(progress);
+            if (progress>=100){
+                partialScan.setVisibility(View.VISIBLE);
+                fullScan.setVisibility(View.VISIBLE);
+                mCircleView.setVisibility(View.INVISIBLE);
+                Intent intent1 =new Intent(getContext(),Antivirus.class);
+
+
+//                getActivity().startActivityFromFragment(new Log(),intent1,2);
+                final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.container, new AppList(), "Log");
+                ft.addToBackStack(null);
+                ft.commit();
+
+            }
         }
     }
 }

@@ -34,4 +34,5 @@ dependencies {
     compile files('commons-codec-1.11/commons-codec-1.11.jar')
     compile files('commons-io-2.6/commons-io-2.6.jar')
     compile 'com.jaredrummler:apk-parser:1.0.2'
+    compile 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
 }
