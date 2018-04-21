@@ -40,12 +40,7 @@ public class MyVolley {
                     DBContract dbContract = new DBContract(context);
                     dbContract.updateScanData(list[0],"INFECTED");
                 }
-//                  else if(response.contains("0")){
-//                    MyVolley.response = response;
-//                    String[] list = response.split("\n");
-//                    DBContract dbContract = new DBContract(context);
-//                    dbContract.updateZDMData(list[0],"NORMAL");
-//                }
+
                 else if(response.contains("1")){
                     MyVolley.response = response;
                     String[] list = response.split("\n");
