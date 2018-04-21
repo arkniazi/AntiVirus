@@ -1,22 +1,15 @@
 package com.example.capk.antivirus;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by capk on 11/21/17.
@@ -43,8 +36,7 @@ public class MyFileRead extends Thread {
 
             while (jarEntryEnumeration.hasMoreElements()){
                 jarEntry = jarEntryEnumeration.nextElement();
-//                Log.d(TAG, "run: "+jarEntry.getName());
-                if (jarEntry.getName().equals("MANIFEST.MF")){
+               if (jarEntry.getName().equals("META-INF/MANIFEST.MF")){
                     jarEntry = jarFile.getJarEntry(jarEntry.getName());
                     break;
                 }
@@ -55,15 +47,16 @@ public class MyFileRead extends Thread {
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-            String result;
-            String hashResult;
-            String result1;
-            String hashResult1;
-            String result2;
-            String hashResult2;
+            String result = "";
+            String hashResult = "";
+            String result1= "";
+            String hashResult1= "";
+            String result2="";
+            String hashResult2="";
             //need to improve for old apps e.g who don't use sha256
             while ((result = bufferedReader.readLine()) != null) {
                 if (result.contains("Name: classes.dex")){
+
                     hashResult = bufferedReader.readLine();
                     bufferedReader.readLine();
                     result1 = bufferedReader.readLine();
@@ -72,6 +65,10 @@ public class MyFileRead extends Thread {
 
                     result2 = bufferedReader.readLine();
                     hashResult2 = bufferedReader.readLine();
+                    if (result1==null)
+                        result1 = "";
+                    if (result2 == null)
+                        result2 = "";
                     if (result1.contains("classes") && result2.contains("classes") ){
                         linkedList.add(result);
                         linkedList.add(hashResult);
@@ -81,7 +78,14 @@ public class MyFileRead extends Thread {
                         linkedList.add(hashResult2);
                         break;
 
-                    }else {
+                    }
+                    else if (result1.contains("classes")){
+                        linkedList.add(result);
+                        linkedList.add(hashResult);
+                        linkedList.add(result1);
+                        linkedList.add(hashResult1);
+                    }
+                    else{
                         linkedList.add(result);
                         linkedList.add(hashResult);
 

@@ -18,11 +18,11 @@ import java.util.zip.ZipEntry;
 
 public class FileToHash {
 
-    public static String calculateSHA256(String apkName,String filename){
+    public static String calculateSHA(String apkName,String filename,String type){
 
 
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA256");
+            MessageDigest md = MessageDigest.getInstance(type);
             InputStream inputStream = get(apkName,filename);
             if (inputStream==null){
                 return "";
@@ -48,7 +48,10 @@ public class FileToHash {
                 if(hex.length()==1) hexString.append('0');
                 hexString.append(hex);
             }
-            return BaseEncoding.base64().encode(byteArray);
+           String s=  BaseEncoding.base64().encode(byteArray);
+
+//            android.util.Log.d(TAG, "calculateSHA: "+s);
+            return s;
 
         } catch (IOException e) {
             e.printStackTrace();

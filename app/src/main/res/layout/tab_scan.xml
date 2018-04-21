@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:CircleProgressView="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,8 +11,8 @@
 
 
     <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="386dp"
+        android:layout_width="309dp"
+        android:layout_height="422dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         tools:ignore="MissingConstraints"
@@ -20,25 +20,27 @@
         tools:layout_editor_absoluteY="0dp">
 
         <Button
-            android:id="@+id/fullScan"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@drawable/round_button"
-            android:text="Full SCAN"
-            android:textColor="@android:color/holo_blue_bright"
-            tools:layout_editor_absoluteX="134dp"
-            tools:layout_editor_absoluteY="153dp" />
-
-        <Button
             android:id="@+id/partialScan"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="245dp"
+            android:layout_height="243dp"
             android:layout_marginTop="30dp"
             android:background="@drawable/round_button"
             android:text="Partial Scan"
-            android:textColor="@android:color/holo_blue_bright"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
             tools:layout_editor_absoluteX="135dp"
             tools:layout_editor_absoluteY="80dp" />
+
+        <Button
+            android:id="@+id/fullScan"
+            android:layout_width="245dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="@android:dimen/app_icon_size"
+            android:background="@drawable/rectangle_button"
+            android:text="Full SCAN"
+            android:textColor="@android:color/black"
+            tools:layout_editor_absoluteX="134dp"
+            tools:layout_editor_absoluteY="153dp" />
 
     </LinearLayout>
 
@@ -49,7 +51,7 @@
         android:textAlignment="center"
         android:visibility="invisible"
         CircleProgressView:cpv_autoTextSize="true"
-        CircleProgressView:cpv_barColor="@color/colorPrimary"
+        CircleProgressView:cpv_barColor="@android:color/holo_orange_light"
         CircleProgressView:cpv_barWidth="35dp"
         CircleProgressView:cpv_innerContourSize="0dp"
         CircleProgressView:cpv_maxValue="100"
@@ -59,8 +61,8 @@
         CircleProgressView:cpv_seekMode="true"
         CircleProgressView:cpv_showTextInSpinningMode="true"
         CircleProgressView:cpv_showUnit="true"
-        CircleProgressView:cpv_spinColor="@color/colorPrimary"
-        CircleProgressView:cpv_textColor="@android:color/holo_green_light"
+        CircleProgressView:cpv_spinColor="@android:color/holo_orange_light"
+        CircleProgressView:cpv_textColor="@color/progress_bar_text_color"
         CircleProgressView:cpv_textScale="1"
         CircleProgressView:cpv_unit="%"
         CircleProgressView:cpv_unitColor="@android:color/darker_gray"
@@ -71,4 +73,4 @@
         tools:layout_editor_absoluteY="16dp" />
 
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

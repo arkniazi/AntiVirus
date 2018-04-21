@@ -1,6 +1,6 @@
-package com.example.capk.antivirus;
+    package com.example.capk.antivirus;
 
-import android.app.IntentService;
+    import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -10,7 +10,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
-import java.io.File;
+import com.android.volley.Request;
+import com.example.capk.antivirus.server.MyVolley;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,138 +21,181 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
-/**
- * Created by capk on 4/12/18.
- */
+    /**
+     * Created by capk on 4/12/18.
+     */
 
-public class ScanService extends IntentService {
+    public class ScanService extends IntentService {
 
-    LinkedList<String> nameList = new LinkedList<>();
-    LinkedList<String> hashList = new LinkedList<>();
-    DBContract dbContract;
-    public ScanService(String name) {
-        super(name);
-    }
-    public ScanService(){
-        super("ScanService");
-
-    }
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        String scanType = intent.getDataString();
-        if (scanType.equals("partial")){
-            dbContract = new DBContract(getApplicationContext());
-            dbContract.dropTable();
-            partialScan();
+        LinkedList<String> nameList = new LinkedList<>();
+        LinkedList<String> hashList = new LinkedList<>();
+        String posturl = "http://172.19.0.166:8081";
+        String geturl = "http://172.19.0.166:8082/Data/result.txt";
+        String geturlsvm = "http://172.19.0.166:8082/Data/svm-result.txt";
+        DBContract dbContract;
+//        CloudConnection cloudConnection;
+        public ScanService(String name) {
+            super(name);
         }
-    }
+        public ScanService(){
+            super("ScanService");
 
-    public void partialScan(){
-
-        PackageManager packageManager = getApplicationContext().getPackageManager();
-        List<ApplicationInfo> pkgAppsList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-        if (true){
-            for (int i=0;i<pkgAppsList.size();i++){
-                if(isSystemPackage(pkgAppsList.get(i))) {
-                    pkgAppsList.remove(i);
-                    --i;
-
-                }                }
-
-        for (int a = 0;a<pkgAppsList.size();a++) {
-            ApplicationInfo applicationInfo = pkgAppsList.get(a);
-            String packageName = applicationInfo.packageName;
-            String[] permissions = GetFiles.getPermissions(packageManager,applicationInfo);
-
-            ScanHelper helper = new ScanHelper();
-            helper.getPathList(applicationInfo);
-
-            String[] hashes =new String[hashList.size()];
-            String hashSHA1 = "";
-
-            boolean check = true;
-            for (int i = 0; i < nameList.size(); i++) {
-                hashSHA1 = FileToHash.calculateSHA256(applicationInfo.sourceDir, nameList.get(i));
-                hashes[i] = hashSHA1;
-                check = check && hashSHA1.equals(hashList.get(i));
-            }
-
-            PackageInfo pinfo = null;
-            try {
-                pinfo = packageManager.getPackageInfo(packageName, 0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            writePermissions(packageName,permissions,hashes);
-            int percent = (int)(((a+1) * 100.0f) / pkgAppsList.size());
-            android.util.Log.d(TAG, "partialScan: "+percent+ " "+a+" "+pkgAppsList.size());
-            updateProgress( percent);
-            String dexCheck = "infected";
-            if (check)
-                dexCheck = "Not infected";
-
-            dbContract.insertData(packageName,dexCheck,pinfo.versionName, String.valueOf(pinfo.versionCode));
+        }
+        @Override
+        protected void onHandleIntent(@Nullable Intent intent) {
+            String scanType = intent.getDataString();
+            if (scanType.equals("partial")){
+                dbContract = new DBContract(getApplicationContext());
+                dbContract.dropTable();
+                partialScan();
             }
         }
-    }
 
-    public void fullScan(){
+        public void partialScan(){
+            PackageManager packageManager = getApplicationContext().getPackageManager();
+            List<ApplicationInfo> pkgAppsList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+            if (true){
+                for (int i=0;i<pkgAppsList.size();i++){
+                    String dagonName = this.getPackageName();
+                    if(isSystemPackage(pkgAppsList.get(i)) || dagonName.equals(pkgAppsList.get(i).packageName)) {
+                        pkgAppsList.remove(i);
+                        --i;
 
-    }
-
-    public void updateProgress(int progress){
-        Intent intent = new Intent("DAGON_SCAN");
-        intent.putExtra("progress",progress);
-        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-
-    }
-
-    private void writePermissions(String packageName,String[] data,String[] hashes){
-        if (data!=null && hashes!=null){
-            File file = new File(getApplicationContext().getFilesDir(),"Permissions.txt");
-            FileOutputStream outputStream = null;
-            try {
-                outputStream = openFileOutput("Permissions.txt", Context.MODE_PRIVATE);
-                outputStream.write(packageName.getBytes());
-                outputStream.write("\n".getBytes());
-                outputStream.write(TextUtils.join(",",data).getBytes());
-                outputStream.write("\n".getBytes());
-                outputStream.write(TextUtils.join(",",hashes).getBytes());
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private boolean isSystemPackage(ApplicationInfo applicationInfo) {
-        return ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
-    }
-
-
-    public class ScanHelper {
-        public void getPathList(ApplicationInfo applicationInfo) {
-            MyFileRead fileRead = new MyFileRead(getApplicationContext(), applicationInfo.sourceDir);
-            fileRead.start();
-            while (fileRead.isAlive()) {
-
-            }
-            LinkedList<String> list = fileRead.getList();
-            String[] str;
-            for (int i = 0; i < list.size(); i++) {
-
-                if (i == 0 || i % 2 == 0) {
-                    str = list.get(i).split(" ");
-                    nameList.add(str[str.length - 1]);
+                    }
                 }
-                if (i % 2 != 0) {
-                    str = list.get(i).split(" ");
-                    hashList.add(str[str.length - 1]);
+                ScanHelper helper = new ScanHelper();
+            for (int a = 0;a<pkgAppsList.size();a++) {
+                ApplicationInfo applicationInfo = pkgAppsList.get(a);
+                String packageName = applicationInfo.packageName;
+                String[] permissions = GetFiles.getPermissions(packageManager,applicationInfo);
+                android.util.Log.d(TAG, "partialScan: "+pkgAppsList.size()+" Calling");
+                helper.getPathList(applicationInfo);
+
+                String[] hashes =new String[hashList.size()];
+                String hashSHA1 = "";
+                String hashSHA256 = "";
+
+                boolean check = false;
+                for (int i = 0; i < nameList.size(); i++) {
+//                    hashSHA256 = FileToHash.calculateSHA(applicationInfo.sourceDir, nameList.get(i),"SHA-256");
+                    hashSHA1 = FileToHash.calculateSHA(applicationInfo.sourceDir, nameList.get(i),"SHA1");
+                    hashes[i] = hashSHA1;
+                    check = check || hashSHA1.equals(hashList.get(i));
+
+                }
+                PackageInfo pinfo = null;
+                try {
+                    pinfo = packageManager.getPackageInfo(packageName, 0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                writePermissions(packageName,permissions,hashes);
+
+                int percent = (int)(((a+1) * 100.0f) / pkgAppsList.size());
+                updateProgress( percent);
+
+                String dexCheck = "YES";
+                if (!check){
+                    dexCheck = "NO";
+                }
+                String data;
+                if (permissions!=null){
+                    data = "hashes="+TextUtils.join("\n",hashes)+"permissions="+TextUtils.join(",",permissions);
+                }else{
+
+                    data = "hashes="+TextUtils.join("\n",hashes);
+                }
+                android.util.Log.d(TAG, "partialScan: "+data);
+                MyVolley myVolley = new MyVolley(getApplicationContext());
+                myVolley.request(Request.Method.POST,posturl,packageName,data);
+                myVolley.request(Request.Method.GET,geturl,packageName,data);
+                myVolley.request(Request.Method.GET,geturlsvm,packageName,data);
+
+                String scanStatus = "CLEAN";
+                dbContract.insertData(packageName,dexCheck,pinfo.versionName, String.valueOf(pinfo.versionCode),scanStatus,"NORMAL");
+
+
+
+
+                //                if (MyVolley.response==null)
+//                    MyVolley.response = "";
+//                if (MyVolley.response.contains("infected")){
+//                    String [] list = MyVolley.response.split("\n");
+//                    dbContract.updateData(list[0],scanStatus);
+//                }else {
+//
+//                }
+//                android.util.Log.d(TAG, "partialScan: "+scanStatus);
+//                android.util.Log.d(TAG, "partialScan: "+MyVolley.response);
+
                 }
             }
-        }}
+        }
+
+        public void fullScan(){
+
+        }
+
+        public void updateProgress(int progress){
+            Intent intent = new Intent("DAGON_SCAN");
+            intent.putExtra("progress",progress);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+
+        }
+
+        private void writePermissions(String packageName,String[] data,String[] hashes){
+            if (data!=null && hashes!=null){//                File file = new File(getApplicationContext().getFilesDir(),"Permissions.txt");
+
+//                File file = new File(getApplicationContext().getFilesDir(),"Permissions.txt");
+                FileOutputStream outputStream = null;
+                try {
+                    outputStream = openFileOutput("permission", Context.MODE_PRIVATE);
+                    outputStream.write(packageName.getBytes());
+                    outputStream.write("\n".getBytes());
+                    outputStream.write(TextUtils.join(",",data).getBytes());
+                    outputStream.write("\n".getBytes());
+                    outputStream.write(TextUtils.join(",",hashes).getBytes());
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+        private boolean isSystemPackage(ApplicationInfo applicationInfo) {
+            return ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
+        }
 
 
-}
+        public class ScanHelper {
+            public void getPathList(ApplicationInfo applicationInfo) {
+                MyFileRead fileRead = new MyFileRead(getApplicationContext(), applicationInfo.sourceDir);
+                fileRead.start();
+                while (fileRead.isAlive()){
+
+                }
+                LinkedList<String> list = fileRead.getList();
+                String[] str;
+                for (int i = 0; i < list.size(); i++) {
+                    if (i == 0 || i % 2 == 0) {
+                        str = list.get(i).split(" ");
+                        android.util.Log.d(TAG, "getPathList: "+list.get(i));
+                        nameList.add(str[str.length - 1]);
+                    }
+                    if (i % 2 != 0) {
+                        if (list.get(i).contains("SHA1")){
+                            str = list.get(i).split(" ");
+                            hashList.add(str[str.length - 1]);
+                        }
+                        else {
+                            nameList.removeLast();
+                        }
+                    }
+                }
+            }}
+
+
+    }

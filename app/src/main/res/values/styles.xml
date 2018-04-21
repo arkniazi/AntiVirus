@@ -7,9 +7,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/NotificationBarColor</item>
-        <item name="android:textColorPrimary">@android:color/holo_green_light</item>
-        <item name="android:textColorPrimaryInverse">@android:color/holo_green_light</item>
-        <item name="android:windowBackground">@android:color/background_light</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:textColorPrimaryInverse">@android:color/black</item>
+        <item name="android:windowBackground">@color/light_dark</item>
+        <item name="android:colorBackground">@color/light_dark</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

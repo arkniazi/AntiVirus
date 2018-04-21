@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -39,17 +38,18 @@ public class Scan extends android.support.v4.app.Fragment {
         fullScan = rootView.findViewById(R.id.fullScan);
         mCircleView = rootView.findViewById(R.id.circleView);
 
+        Helper helper = new Helper();
+        IntentFilter intentFilter = new IntentFilter("DAGON_SCAN");
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(helper,intentFilter);
         partialScan.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("WrongConstant")
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(getActivity(),ScanService.class);
                 intent.setData(Uri.parse("partial"));
                 getActivity().startService(intent);
 
-                Helper helper = new Helper();
-                IntentFilter intentFilter = new IntentFilter("DAGON_SCAN");
-                LocalBroadcastManager.getInstance(getContext()).registerReceiver(helper,intentFilter);
                 partialScan.setVisibility(View.INVISIBLE);
                 fullScan.setVisibility(View.INVISIBLE);
                 mCircleView.setVisibility(View.VISIBLE);
@@ -65,7 +65,10 @@ public class Scan extends android.support.v4.app.Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(),ScanService.class);
                 intent.setData(Uri.parse("full"));
-                getActivity().startService(intent);
+//                getActivity().startService(intent);
+//                partialScan.setVisibility(View.INVISIBLE);
+//                fullScan.setVisibility(View.INVISIBLE);
+//                mCircleView.setVisibility(View.VISIBLE);
             }
         });
 
@@ -122,15 +125,8 @@ public class Scan extends android.support.v4.app.Fragment {
                 partialScan.setVisibility(View.VISIBLE);
                 fullScan.setVisibility(View.VISIBLE);
                 mCircleView.setVisibility(View.INVISIBLE);
-                Intent intent1 =new Intent(getContext(),Antivirus.class);
-
-
-//                getActivity().startActivityFromFragment(new Log(),intent1,2);
-                final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.container, new AppList(), "Log");
-                ft.addToBackStack(null);
-                ft.commit();
-
+                Antivirus.mViewPager.arrowScroll(View.FOCUS_RIGHT);
+                Antivirus.mViewPager.getAdapter().notifyDataSetChanged();
             }
         }
     }
