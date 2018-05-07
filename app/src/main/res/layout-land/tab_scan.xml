@@ -11,22 +11,22 @@
 
 
     <LinearLayout
-        android:layout_width="302dp"
+        android:layout_width="wrap_content"
         android:layout_height="422dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:gravity="top"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:visibility="visible"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
 
         <Button
             android:id="@+id/partialScan"
-            android:layout_width="245dp"
-            android:layout_height="243dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
             android:background="@drawable/round_button"
             android:text="Scan"
             android:textColor="@android:color/black"
@@ -34,30 +34,42 @@
             tools:layout_editor_absoluteX="135dp"
             tools:layout_editor_absoluteY="80dp" />
 
-        <CheckBox
-            android:id="@+id/fullscan"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="76dp"
-            android:layout_marginTop="@android:dimen/app_icon_size"
-            android:text="Include System Apps" />
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="156dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="83dp"
-            android:text="*Note: System Apps can    take longer time."
-            android:textColor="@android:color/background_dark" />
+            <CheckBox
+                android:id="@+id/fullscan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="76dp"
+                android:layout_marginTop="10dp"
+                android:text="Include System Apps" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="83dp"
+                android:layout_marginTop="10dp"
+                android:text="*Note: System Apps can take longer time."
+                android:textColor="@android:color/background_dark"
+                android:visibility="visible" />
+        </LinearLayout>
 
     </LinearLayout>
 
     <at.grabner.circleprogress.CircleProgressView
         android:id="@+id/circleView"
-        android:layout_width="401dp"
-        android:layout_height="278dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
         android:clickable="false"
         android:contextClickable="false"
         android:focusableInTouchMode="false"
@@ -65,11 +77,11 @@
         android:forceHasOverlappingRendering="false"
         android:textAlignment="center"
         android:visibility="invisible"
-        CircleProgressView:cpv_blockCount="18"
-        CircleProgressView:cpv_blockScale="0.9"
         CircleProgressView:cpv_autoTextSize="true"
         CircleProgressView:cpv_barColor="@color/progress_bar_text_color"
         CircleProgressView:cpv_barWidth="35dp"
+        CircleProgressView:cpv_blockCount="18"
+        CircleProgressView:cpv_blockScale="0.9"
         CircleProgressView:cpv_innerContourSize="0dp"
         CircleProgressView:cpv_maxValue="100"
         CircleProgressView:cpv_outerContourSize="0dp"

@@ -2,6 +2,7 @@ package com.example.capk.antivirus;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -81,6 +82,9 @@ public class Log extends android.support.v4.app.Fragment {
                  holder.appIcon.setImageDrawable(packageManager.getApplicationIcon(applicationInfo));
                  holder.appLabel.setText(packageManager.getApplicationLabel(applicationInfo));
                  holder.appVersion.setText("Verified: "+dbSchema.getDexCheck());
+                 if (dbSchema.getScanStatus().equals("INFECTED")){
+                     holder.scanStatus.setTextColor(Color.RED);
+                 }
                  holder.scanStatus.setText("Scan Status: "+dbSchema.getScanStatus());
                  holder.zdmStatus.setText("ZDM Analysis: "+dbSchema.getZdmAnalysis());
 

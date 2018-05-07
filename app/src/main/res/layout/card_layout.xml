@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="140dp"
     android:layout_margin="5dp"
     android:clickable="true"
     android:foreground="?selectableItemBackground"
@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/app_icon"
+            android:textColorLink="@android:color/black"
             android:textSize="20sp" />
 
         <TextView
@@ -37,21 +38,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/app_label"
-            android:layout_toRightOf="@+id/app_icon" />
+            android:layout_toRightOf="@+id/app_icon"
+            android:textColorLink="@android:color/black" />
 
         <TextView
             android:id="@+id/scan_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/app_version"
-            android:layout_toRightOf="@+id/app_icon" />
+            android:layout_toRightOf="@+id/app_icon"
+            android:textColorLink="@android:color/black" />
 
         <TextView
             android:id="@+id/zdm_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/scan_status"
-            android:layout_toRightOf="@+id/app_icon" />
+            android:layout_toRightOf="@+id/app_icon"
+            android:textColorLink="@android:color/black" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

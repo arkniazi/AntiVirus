@@ -32,7 +32,9 @@ import static android.content.ContentValues.TAG;
         String posturl = "http://172.19.0.166:8081";
         String geturl = "http://172.19.0.166:8082/Data/result.txt";
         String geturlsvm = "http://172.19.0.166:8082/Data/svm-result.txt";
+        List<ApplicationInfo> pkgAppsList;
         DBContract dbContract;
+        String scanType;
 //        CloudConnection cloudConnection;
         public ScanService(String name) {
             super(name);
@@ -43,26 +45,18 @@ import static android.content.ContentValues.TAG;
         }
         @Override
         protected void onHandleIntent(@Nullable Intent intent) {
-            String scanType = intent.getDataString();
-            if (scanType.equals("partial")){
+            scanType = intent.getDataString();
                 dbContract = new DBContract(getApplicationContext());
                 dbContract.dropTable();
-                partialScan();
-            }
+                scan();
         }
 
-        public void partialScan(){
+        public void scan(){
             PackageManager packageManager = getApplicationContext().getPackageManager();
-            List<ApplicationInfo> pkgAppsList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-            if (true){
-                for (int i=0;i<pkgAppsList.size();i++){
-                    String dagonName = this.getPackageName();
-                    if(isSystemPackage(pkgAppsList.get(i)) || dagonName.equals(pkgAppsList.get(i).packageName)) {
-                        pkgAppsList.remove(i);
-                        --i;
-
-                    }
-                }
+            pkgAppsList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+            if (scanType.equals("partial")){
+                removeSystemApps();
+            }
                 ScanHelper helper = new ScanHelper();
             for (int a = 0;a<pkgAppsList.size();a++) {
                 ApplicationInfo applicationInfo = pkgAppsList.get(a);
@@ -114,20 +108,14 @@ import static android.content.ContentValues.TAG;
                 String scanStatus = "CLEAN";
                 dbContract.insertData(packageName,dexCheck,pinfo.versionName, String.valueOf(pinfo.versionCode),scanStatus,"NORMAL");
 
+                }
+            }
 
-
-
-                //                if (MyVolley.response==null)
-//                    MyVolley.response = "";
-//                if (MyVolley.response.contains("infected")){
-//                    String [] list = MyVolley.response.split("\n");
-//                    dbContract.updateData(list[0],scanStatus);
-//                }else {
-//
-//                }
-//                android.util.Log.d(TAG, "partialScan: "+scanStatus);
-//                android.util.Log.d(TAG, "partialScan: "+MyVolley.response);
-
+        public void removeSystemApps(){
+            for (int i=0;i<pkgAppsList.size();i++){
+                if(isSystemPackage(pkgAppsList.get(i))|| getApplicationContext().getPackageName().equals(pkgAppsList.get(i).packageName)){
+                    pkgAppsList.remove(i);
+                    --i;
                 }
             }
         }

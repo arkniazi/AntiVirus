@@ -20,7 +20,7 @@
 
         <ImageView
             android:id="@+id/appIcon"
-            android:layout_width="wrap_content"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
@@ -28,21 +28,22 @@
 
         <TextView
             android:id="@+id/appName"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/appIcon"
             android:text="TextView"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColorLink="@android:color/background_dark"
             tools:layout_editor_absoluteX="20dp" />
 
         <ImageView
             android:id="@+id/delete"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignBottom="@+id/appName"
             android:layout_alignParentEnd="true"
-            app:srcCompat="@android:drawable/ic_menu_delete" />
+            app:srcCompat="@drawable/redtrash512" />
 
     </RelativeLayout>
 

@@ -4,7 +4,7 @@
     <!--style="@style/Widget.AppCompat.Button.Borderless"-->
     <item>
         <shape android:shape="oval">
-            <solid android:color="#ADE5CB"/>
+            <solid android:color="@color/b1"/>
         </shape>
     </item>
 </ripple>
