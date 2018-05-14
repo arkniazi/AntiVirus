@@ -38,7 +38,7 @@ public class MyVolley {
                     DBContract dbContract = new DBContract(context);
                     dbContract.updateScanData(list[0],"INFECTED");
                 }
-
+//reading response
                 else if(response.contains("1")){
                     MyVolley.response = response;
                     String[] list = response.split("\n");
