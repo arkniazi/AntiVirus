@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.example.capk.antivirus.server.MyVolley;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -120,10 +119,6 @@ import static android.content.ContentValues.TAG;
             }
         }
 
-        public void fullScan(){
-
-        }
-
         public void updateProgress(int progress){
             Intent intent = new Intent("DAGON_SCAN");
             intent.putExtra("progress",progress);
@@ -135,7 +130,7 @@ import static android.content.ContentValues.TAG;
             if (data!=null && hashes!=null){//                File file = new File(getApplicationContext().getFilesDir(),"Permissions.txt");
 
 //                File file = new File(getApplicationContext().getFilesDir(),"Permissions.txt");
-                FileOutputStream outputStream = null;
+                FileOutputStream outputStream;
                 try {
                     outputStream = openFileOutput("permission", Context.MODE_PRIVATE);
                     outputStream.write(packageName.getBytes());
@@ -144,8 +139,6 @@ import static android.content.ContentValues.TAG;
                     outputStream.write("\n".getBytes());
                     outputStream.write(TextUtils.join(",",hashes).getBytes());
 
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

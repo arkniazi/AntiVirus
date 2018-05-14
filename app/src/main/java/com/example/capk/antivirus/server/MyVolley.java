@@ -1,8 +1,6 @@
 package com.example.capk.antivirus.server;
-
 import android.content.Context;
 import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,7 +20,7 @@ import static android.content.ContentValues.TAG;
 
 public class MyVolley {
 
-    Context context;
+    private Context context;
     public static String response;
     public MyVolley(Context applicationContext) {
         this.context = applicationContext;

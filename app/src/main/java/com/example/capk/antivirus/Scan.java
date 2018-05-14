@@ -69,19 +69,6 @@ public class Scan extends android.support.v4.app.Fragment {
             }
         });
 
-        fullScan.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("WrongConstant")
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),ScanService.class);
-                intent.setData(Uri.parse("full"));
-//                getActivity().startService(intent);
-//                partialScan.setVisibility(View.INVISIBLE);
-//                fullScan.setVisibility(View.INVISIBLE);
-//                mCircleView.setVisibility(View.VISIBLE);
-            }
-        });
-
         return rootView;
     }
 
@@ -108,7 +95,7 @@ public class Scan extends android.support.v4.app.Fragment {
         }
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
+    public boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {

@@ -1,20 +1,13 @@
 package com.example.capk.antivirus;
 
-import android.text.style.TabStopSpan;
-import android.util.Base64;
-
 import com.google.common.io.BaseEncoding;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import static android.util.Base64.*;
 
 /**
  * Created by capk on 2/16/18.
@@ -47,6 +40,7 @@ public static String convertToHex(byte[] data) {
         try {
             byte[] byteArray = Hex.decodeHex(charArray);
             return BaseEncoding.base64().encode(byteArray);
+//            return byteArray.toString();
         } catch (DecoderException e) {
             e.printStackTrace();
         }
@@ -55,7 +49,7 @@ public static String convertToHex(byte[] data) {
     }
     public static String SHA256(byte[] text)  {
         try {
-        MessageDigest md = MessageDigest.getInstance("SHA256");
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
 
         md.update(text, 0, text.length);
         char[] charArray = convertToHex(md.digest()).toCharArray();
